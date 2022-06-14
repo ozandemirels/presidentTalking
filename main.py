@@ -4,16 +4,27 @@ from openpyxl import Workbook
 from datetime import date
 import time
 
-url = 'https://www.tccb.gov.tr/receptayyiperdogan/konusmalar/?&page=1'
+tccurl = 'https://www.tccb.gov.tr/'
+prompturl = tccurl + 'receptayyiperdogan/konusmalar/?&page=1'
 
 headers = {'User-Agent': 'my user agent(google)'}
-request = requests.get(url, headers=headers)
+request = requests.get(prompturl, headers=headers)
 soup = BeautifulSoup(request.content, 'html.parser')
 prompt_div = soup.find('div', id='divContentList')
-dls = prompt_div.find_all('dl')
+a_s = prompt_div.find_all('a')
 
-for dl in dls:
-    print(dl.text)
+urllist = []
+for a in a_s:
+    url = a.get('href')
+    subject = a.text
+    url = tccurl + url
+    request = requests.get(url, headers=headers)
+    soup = BeautifulSoup(request.content, 'html.parser')
+    speech = soup.find('div', id='divContentArea').text.replace('\n','')
+    urllist.append([subject,speech])
+    print(urllist)
+    time.sleep(15)
+
 
 #home_divs.dl[0].text
 

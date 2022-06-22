@@ -1,5 +1,3 @@
-import time
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -41,14 +39,15 @@ for i in range(1,999):
             url = tccurl + url
             request = requests.get(url, headers=headers)
             soup = BeautifulSoup(request.content, 'html.parser')
-            speech = soup.find('div', id='divContentArea').text.replace('\n', '').replace('.', ' ').replace(',', ' ')\
+            speech = soup.find('div', id='divContentArea').text
+            speech = speech.replace('\n', '').replace('.', ' ').replace(',', ' ') \
+                .replace('\n', '').replace('.', ' ').replace(',', ' ') \
                 .replace('?', ' ').replace('!', ' ').replace(':', ' ').replace(';', ' ').replace('"', '')\
-                .replace("'", "").replace("'", "").replace("-", " ").lower()
+                .replace("'", "").replace('-', " ").replace('’', '').lower()
             wordCount(speech, dic)
         elif date[6:10] != '2022':
             forStatus = 'Exit'
             break
-    print(len(dic))
     if forStatus == 'Exit':
         break
 
